@@ -1,20 +1,20 @@
 <?php
+/**
+ * @package hello_cooper
+ * @version 2
+ */
 /*
 Plugin Name: Hello Cooper
-Plugin URI: http://saints-archive.com/projects/plugins.html
+Plugin URI: http://cryptic.be/27/hello-cooper-for-wordpress/
 Description: There's a fish in the percolator.
-Author: Griffin S. Boyce
-Version: 1.0
-Author URI: http://saints-archive.com/
+Author: Griffin Boyce
+Version: 2
+Author URI: http://cryptic.be
 */
 
-// INSTRUCTIONS
-// One quote per line
-// 50 characters max
-// Commas and apostrophes are okay
-// This really only works with one-liners
-
-$lyrics = "There's a fish in the percolator
+function cooper_quote() {
+/** These are quotes from Twin Peaks. Just FYI. */
+$quote = "There's a fish in the percolator
 Damn fine coffee... and hot!
 This must be where pies go when they die
 Black as midnight on a moonless night
@@ -53,37 +53,40 @@ Fellas, coincidence and fate figure largely in our lives
 Dance with me!
 The owls are not what they seem";
 
-// Here we split it into lines
-$lyrics = explode("\n", $lyrics);
-// And then randomly choose a line
-$chosen = wptexturize( $lyrics[ mt_rand(0, count($lyrics) - 1) ] );
+	// Here we split it into lines
+	$quote = explode( "\n", $quote );
 
-// This just echoes the chosen line, we'll position it later
-function hello_dolly() {
-	global $chosen;
-	echo "<p id='dolly'>$chosen</p>";
+	// And then randomly choose a line
+	return wptexturize( $quote[ mt_rand( 0, count( $quote ) - 1 ) ] );
 }
 
-// Now we set that function up to execute when the admin_footer action is called
-add_action('admin_footer', 'hello_dolly');
+// This just echoes the chosen line, we'll position it later
+function hello_cooper() {
+	$chosen = cooper_quote();
+	echo "<p id='cooper'>$chosen</p>";
+}
+
+// Now we set that function up to execute when the admin_notices action is called
+add_action( 'admin_notices', 'hello_cooper' );
 
 // We need some CSS to position the paragraph
-function dolly_css() {
+function cooper_css() {
+	// This makes sure that the positioning is also good for right-to-left languages
+	$x = is_rtl() ? 'left' : 'right';
+
 	echo "
 	<style type='text/css'>
-	#dolly {
-		position: absolute;
-		top: 2.3em;
+	#cooper {
+		float: $x;
+		padding-$x: 15px;
+		padding-top: 5px;		
 		margin: 0;
-		padding: 0;
-		right: 10px;
-		font-size: 16px;
-		color: #d54e21;
+		font-size: 13px;
 	}
 	</style>
 	";
 }
 
-add_action('admin_head', 'dolly_css');
+add_action( 'admin_head', 'cooper_css' );
 
 ?>
